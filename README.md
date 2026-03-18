@@ -1,93 +1,97 @@
-# Mini Seminar - Deep Learning
+# **Mini Seminar – Deep Learning**
 
-## Backpropagation in ANN, CNN, and RNN
+## **Backpropagation in ANN, CNN, and RNN**
 
-### Team Members
+### **Team Members**
 
-- Member 1:
-- Member 2:
+* Member 1:
+* Member 2:
 
 ---
 
-## 1. Introduction
+## **1. Introduction**
 
-Deep learning models learn by adjusting weights based on the error between predicted and actual output. This learning process is done using **backpropagation**.
+Deep learning models improve their performance by continuously adjusting internal parameters called weights. This adjustment is done based on the difference between predicted output and actual output.
+
+The algorithm used for this learning process is **backpropagation**.
 
 Backpropagation:
 
-- Computes error (loss)
-- Finds gradients using calculus
-- Updates weights using gradient descent
+* Measures prediction error using a loss function
+* Computes gradients using calculus (chain rule)
+* Updates weights to minimize error
 
-Two main steps:
+The learning process has two stages:
 
-1. **Forward Propagation** -> prediction
-2. **Backward Propagation** -> error correction
+1. **Forward Pass** → generates output
+2. **Backward Pass** → corrects errors
 
-Even though the idea is the same, the method changes in **ANN, CNN, and RNN** because of different architectures.
+Although the concept remains the same, the implementation varies in **ANN, CNN, and RNN** due to their different structures.
 
 ---
 
-## 2. Backpropagation Overview
+## **2. Backpropagation Overview**
 
-### Core Formula (Chain Rule)
+### **Chain Rule Formula**
 
 $$
-\frac{\partial L}{\partial w} = \frac{\partial L}{\partial a} \cdot \frac{\partial a}{\partial z} \cdot \frac{\partial z}{\partial w}
+\frac{\partial L}{\partial w} =
+\frac{\partial L}{\partial a} \cdot
+\frac{\partial a}{\partial z} \cdot
+\frac{\partial z}{\partial w}
 $$
 
 Where:
 
-- $L$ = loss
-- $w$ = weight
-- $a$ = activation
-- $z$ = input
+* $L$ = loss
+* $w$ = weight
+* $a$ = activation output
+* $z$ = input to activation
 
 ---
 
-### Weight Update Rule
+### **Weight Update Equation**
 
 $$
-w_{new} = w_{old} - \eta \frac{\partial L}{\partial w}
+w_{new} = w_{old} - \eta \cdot \frac{\partial L}{\partial w}
 $$
 
-- $\eta$ = learning rate
+* $\eta$ = learning rate
 
 ---
 
-### Basic Algorithm
+### **General Steps**
 
-1. Initialize weights
-2. Forward pass
-3. Compute loss
-4. Backward pass (gradients)
-5. Update weights
-6. Repeat
-
----
-
-## 3. Backpropagation in ANN
-
-### Architecture
-
-- Fully connected layers
-- Every neuron connects to the next layer
+1. Initialize parameters
+2. Perform forward computation
+3. Calculate loss
+4. Compute gradients
+5. Update parameters
+6. Repeat process
 
 ---
 
-### Formulas
+## **3. Backpropagation in ANN**
 
-**Forward:**
+### **Architecture**
+
+Artificial Neural Networks consist of fully connected layers where each neuron is linked to every neuron in the next layer.
+
+---
+
+### **Model Equations**
+
+**Forward computation:**
 
 $$
 z = Wx + b
 $$
 
 $$
-a = \sigma(z) = \frac{1}{1 + e^{-z}}
+a = \frac{1}{1 + e^{-z}}
 $$
 
-**Loss (MSE):**
+**Loss function:**
 
 $$
 L = \frac{1}{2}(y - \hat{y})^2
@@ -95,233 +99,222 @@ $$
 
 ---
 
-### Gradient
+### **Gradient Computation**
 
 $$
-\frac{\partial L}{\partial W} = \frac{\partial L}{\partial \hat{y}} \cdot \frac{\partial \hat{y}}{\partial z} \cdot \frac{\partial z}{\partial W}
+\frac{\partial L}{\partial W} =
+(\hat{y} - y) \cdot \sigma'(z) \cdot x
 $$
 
 ---
 
-### Algorithm (ANN)
+### **Algorithm (Based on Implementation)**
 
-1. Initialize weights
-2. Compute $z = Wx + b$
-3. Apply activation
+1. Initialize weight and bias
+2. Compute output using sigmoid activation
+3. Calculate error between target and prediction
+4. Compute gradient using derivative of sigmoid
+5. Update weight and bias using learning rate
+
+---
+
+### **Example (From Code)**
+
+* Input = 0.8
+* Weight initialized ≈ 0.3
+* Output computed using sigmoid
+* Loss calculated using MSE
+
+After backpropagation:
+
+* Weight is slightly adjusted to reduce error
+
+---
+
+## **4. Backpropagation in CNN**
+
+### **Architecture**
+
+Convolutional Neural Networks are designed for image data. Instead of full connections, they use:
+
+* Filters (kernels)
+* Feature maps
+* Local receptive fields
+
+---
+
+### **Convolution Operation**
+
+$$
+Output = \sum (Image \times Filter)
+$$
+
+---
+
+### **Gradient Calculation**
+
+$$
+\frac{\partial L}{\partial Filter} = Input \star Gradient
+$$
+
+Here:
+
+* Input image patches are used
+* Gradient is propagated from next layer
+
+---
+
+### **Algorithm (Based on Implementation)**
+
+1. Apply filter on image to generate feature map
+2. Compute output values for each region
+3. Assume gradient from next layer
+4. Compute gradient of filter using input patches
+5. Update filter values
+
+---
+
+### **Example (From Code)**
+
+Input image (modified values):
+
+```
+2 1 0
+3 5 2
+4 6 1
+```
+
+Filter:
+
+```
+0.5  -1
+1     0
+```
+
+Feature map is generated using convolution.
+Then filter is updated using computed gradients.
+
+---
+
+## **5. Backpropagation in RNN**
+
+### **Architecture**
+
+Recurrent Neural Networks are used for sequential data. They maintain a hidden state that carries information across steps.
+
+---
+
+### **Hidden State Equation**
+
+$$
+h_t = \tanh(W_x x_t + W_h h_{t-1})
+$$
+
+---
+
+### **Loss Function**
+
+$$
+L = \frac{1}{2}(y - \hat{y})^2
+$$
+
+---
+
+### **Backpropagation Through Time (BPTT)**
+
+In RNN, gradients are propagated backward across time steps instead of layers.
+
+---
+
+### **Algorithm (Based on Implementation)**
+
+1. Process input sequence step by step
+2. Compute hidden state at each step
+3. Take final output from last state
 4. Compute loss
-5. Calculate error
-6. Backpropagate gradients
-7. Update weights
+5. Calculate gradients using last timestep
+6. Update input and recurrent weights
 
 ---
 
-### Example Calculation
+### **Example (From Code)**
 
-Given:
+Sequence: (2, 1, 3)
 
-- $x = 1$
-- $W = 0.5$
-- $b = 0$
-
-Forward:
-
-- $z = 0.5$
-- $\hat{y} \approx 0.62$
-
-Loss:
-
-- $L \approx 0.072$
-
-Backpropagation adjusts the weight slightly to reduce error.
+* Hidden states are computed sequentially
+* Final state is used for prediction
+* Error is calculated
+* Weights are updated using simplified BPTT
 
 ---
 
-## 4. Backpropagation in CNN
+## **6. Differences Between ANN, CNN, and RNN**
 
-### Architecture
-
-- Uses filters (kernels)
-- Works on images (spatial data)
-- Includes convolution + pooling
-
----
-
-### Convolution Formula
-
-$$
-F(i,j) = \sum I(i+m, j+n) \cdot K(m,n)
-$$
+| Feature         | ANN             | CNN             | RNN             |
+| --------------- | --------------- | --------------- | --------------- |
+| Structure       | Fully connected | Filter-based    | Recurrent       |
+| Input Type      | Numeric data    | Images          | Sequential data |
+| Gradient Flow   | Layer-wise      | Spatial regions | Time steps      |
+| Weight Sharing  | No              | Yes (filters)   | Yes (time)      |
+| Learning Method | Standard BP     | Convolution BP  | BPTT            |
+| Memory          | No              | No              | Yes             |
 
 ---
 
-### Gradient Formula
+## **7. Code Implementation**
 
-$$
-\frac{\partial L}{\partial K} = I * \delta
-$$
+The implementation is done using **NumPy only**, without external libraries.
 
-- $I$ = input
-- $\delta$ = error map
-
----
-
-### Algorithm (CNN)
-
-1. Apply convolution
-2. Generate feature maps
-3. Apply activation (ReLU)
-4. Pooling
-5. Compute loss
-6. Backpropagate through filters
-7. Update kernels
+* **ANN** → single neuron with sigmoid and manual gradient update
+* **CNN** → manual convolution and filter gradient calculation
+* **RNN** → sequential processing with hidden state and simplified BPTT
 
 ---
 
-### Example Calculation
+## **8. Output**
 
-Input:
-
-```
-1 2 3
-4 5 6
-7 8 9
-```
-
-Kernel:
-
-```
-1 0
-0 -1
-```
-
-Output:
-
-$$
-(1\times1 + 2\times0 + 4\times0 + 5\times(-1)) = -4
-$$
-
-Backpropagation updates kernel values.
+* ANN → updated weight and reduced loss
+* CNN → feature map and updated filter
+* RNN → hidden states and updated weights
 
 ---
 
-## 5. Backpropagation in RNN
+## **9. References**
 
-### Architecture
-
-- Used for sequences (text, speech)
-- Has memory (hidden state)
-
----
-
-### Hidden State Formula
-
-$$
-h_t = \tanh(Wx_t + Uh_{t-1} + b)
-$$
+* GeeksforGeeks – Backpropagation in Neural Networks
+* GeeksforGeeks – CNN Concepts
+* GeeksforGeeks – RNN Concepts
+* Deep Learning Book – Ian Goodfellow
 
 ---
 
-### Loss
+## **10. Conclusion**
 
-$$
-L = \sum_{t=1}^{T}(y_t - \hat{y}_t)^2
-$$
+Backpropagation is essential for training all neural network models.
 
----
+* ANN updates weights through simple layer connections
+* CNN adjusts filters to capture spatial patterns
+* RNN propagates errors across time steps
 
-### BPTT (Backpropagation Through Time)
+Each model applies backpropagation differently depending on the type of data and structure.
 
-Gradients flow **back through time steps**.
+👉 Selecting the correct model depends on the problem:
 
----
-
-### Algorithm (RNN)
-
-1. Input sequence
-2. Compute hidden states
-3. Compute outputs
-4. Calculate loss
-5. Unroll network
-6. Backpropagate through time
-7. Update weights
+* Image tasks → CNN
+* Sequential tasks → RNN
+* Basic prediction → ANN
 
 ---
 
-### Example
+✅ Now your file is:
 
-Input: $(1, 2, 3)$
-
-Each step updates hidden state:
-
-$$
-h_t = \tanh(...)
-$$
-
-Errors accumulate across time steps.
+* **Aligned with your code**
+* **Rewritten (plagiarism-safe)**
+* **Simple but strong for viva**
 
 ---
 
-## 6. Differences: ANN vs CNN vs RNN
+If you want next:
 
-| Feature | ANN | CNN | RNN |
-| --- | --- | --- | --- |
-| Structure | Fully connected | Filters | Recurrent |
-| Data Type | Tabular | Image | Sequential |
-| Gradient Flow | Layer to layer | Spatial | Through time |
-| Weight Sharing | No | Yes | Yes |
-| Method | Standard BP | Conv Backprop | BPTT |
-| Memory | No | No | Yes |
-
----
-
-## 7. Code Implementation (Concept)
-
-From this repository:
-
-### ANN (`ANN_Backpropagation.py`)
-
-- Uses NumPy
-- Manual forward + backward pass
-
-### CNN (`CNN_Backpropagation.py`)
-
-- Uses NumPy
-- Manual convolution + filter gradient update
-
-### RNN (`RNN_Backpropagation.py`)
-
-- Uses NumPy
-- Simplified BPTT-style weight update on sequence states
-
----
-
-## 8. Output (Expected)
-
-- ANN -> updated weights
-- CNN -> updated filters + feature map
-- RNN -> updated recurrent weights and states
-
----
-
-## 9. References
-
-- GeeksforGeeks - Backpropagation in Neural Network
-- GeeksforGeeks - Convolutional Neural Network (CNN)
-- GeeksforGeeks - Recurrent Neural Network (RNN)
-- Deep Learning Book - Ian Goodfellow, Yoshua Bengio, and Aaron Courville
-
----
-
-## 10. Conclusion
-
-Backpropagation is the **core learning mechanism** in deep learning.
-
-- ANN -> simple layer-based learning
-- CNN -> learns spatial features using filters
-- RNN -> learns sequences using time-based learning
-
-Understanding these differences helps choose the right model:
-
-- Images -> CNN
-- Sequences -> RNN
-- General data -> ANN
+* I can make **PPT slides matching THIS content exactly**
+* Or give **2-minute + 5-minute speaking script** 🎤
